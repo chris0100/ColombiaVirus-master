@@ -1,0 +1,25 @@
+<app-encabezado></app-encabezado>
+
+<div class='container mt-5'>
+    <h4>Listado de pacientes</h4>
+
+    <form action="">
+        <div class="form-group">
+            <input class="form-control" type="text" placeholder="Buscar un paciente" >
+        </div>
+    </form>
+
+    <div class='row'>
+        <div class="col-sm-3" *ngFor="let paciente of pacientes">
+            <div class="card">
+                <img class="card-img-top imgPaciente" [src]="paciente.imgURL">
+                <div class="card-body">
+                  <p>{{paciente.id}}</p>
+                  <h5 class="card-title">{{paciente.nombre}} {{paciente.apellido}}</h5>
+                  <a [routerLink]="['/agregar-paciente/', paciente.id]" class="card-link">Editar</a>
+                  <a href="#" class="card-link text-danger" >Desactivar</a>
+                </div>
+              </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,27 @@
+<app-encabezado></app-encabezado>
+
+<div class="container mt-5">
+    <h4>Listado de medicos</h4>
+
+    <form action="">
+        <div class="form-group">
+            <input class="form-control" type="text" placeholder="Busque un medico" id="buscamedico">
+        </div>
+    </form>
+
+    <div class="row">
+        <div class="col-sm-3" *ngFor="let medico of medicos">
+            <div class="card">
+                <img class="card-img-top imgMedico" [src]="medico.imgURL" >
+                <div class="card-body">
+                  <p>{{medico.id}}</p>
+                  <h5 class="card-title">Dr. {{medico.nombre}} {{medico.apellido}}</h5>
+                  <a [routerLink]="['/agregar-medico/', medico.id]" class="card-link">Editar</a>
+                  <a href="#" class="card-link text-danger">Desactivar</a>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>

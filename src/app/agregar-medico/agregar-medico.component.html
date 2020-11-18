@@ -1,0 +1,91 @@
+<app-encabezado></app-encabezado>
+
+
+<div class="container mt-5">
+    <form [formGroup]="formularioMedico" action="">
+        <div class="row">
+
+
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="">Nombre</label>
+                    <input type="text" class="form-control" formControlName="nombre" placeholder="Agregue su nombre">
+                    <div *ngIf="formularioMedico.controls['nombre'].invalid && formularioMedico.controls['nombre'].dirty" class="alert alert-danger" role="alert">
+                        <span *ngIf="formularioMedico.controls['nombre'].errors.required">Por favor un nombre</span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="">Apellido</label>
+                    <input type="text" class="form-control" formControlName="apellido" placeholder="Agregue su apellido">
+                    <div *ngIf="formularioMedico.controls['apellido'].invalid && formularioMedico.controls['apellido'].dirty" class="alert alert-danger" role="alert">
+                        <span *ngIf="formularioMedico.controls['apellido'].errors.required">Por favor un apellido</span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="">Cédula</label>
+                    <input type="text" class="form-control" formControlName="cedula" placeholder="Agregue su cédula">
+                </div>
+            </div>
+
+
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="">Correo</label>
+                    <input type="text" class="form-control" formControlName="correo" placeholder="Agregue su correo">
+                    <div *ngIf="formularioMedico.controls['correo'].invalid && formularioMedico.controls['correo'].dirty" class="alert alert-danger" role="alert">
+                        <span *ngIf="formularioMedico.controls['correo'].errors.required">Por favor ingresa un correo</span>
+                        <span *ngIf="formularioMedico.controls['correo'].errors.email">Este correo no existe</span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="">Edad</label>
+                    <input type="text" class="form-control" formControlName="edad" placeholder="Agregue su edad">
+                    <div *ngIf="formularioMedico.controls['edad'].invalid && formularioMedico.controls['edad'].dirty" class="alert alert-danger" role="alert">
+                        <span *ngIf="formularioMedico.controls['edad'].errors.required">Por favor una edad</span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="">Telefono</label>
+                    <input type="tex" class="form-control" formControlName="telefono" placeholder="Agregue su telefono">
+                </div>
+            </div>
+
+
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="">Imagen</label>
+                    <input type="file" (change)="subirImagenD($event)" class="form-control-file" formControlName="imgURL" placeholder="Agregue su imagen">
+                    <div *ngIf="formularioMedico.controls['imgURL'].invalid && formularioMedico.controls['imgURL'].dirty" class="alert alert-danger" role="alert">
+                        <span *ngIf="formularioMedico.controls['imgURL'].errors.required">Ingresa una imagen</span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-sm-12">
+                <progressbar [value]="porcentajeSubida" [striped]="true">{{porcentajeSubida}}%</progressbar>
+            </div>
+
+
+            <br><br>
+            <button *ngIf="!esEditable" class="btn btn-primary" [disabled]="formularioMedico.invalid && !urlImagen" (click)="agregar()">Agregar</button>
+            <button *ngIf="esEditable" class="btn btn-primary" [disabled]="formularioMedico.invalid && !urlImagen" (click)="editar()">Editar</button>
+        </div>
+    </form>
+</div>

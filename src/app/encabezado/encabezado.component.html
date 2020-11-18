@@ -1,0 +1,56 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">ColombiaVirus</a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Inicio<span class="sr-only">(current)</span></a>
+        </li>
+
+        <li class="nav-item dropdown" dropdown>
+            <a class="nav-link dropdown-toggle" dropdownToggle id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Pacientes
+            </a>
+            <div class="dropdown-menu" *dropdownMenu aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" routerLink="/agregar-paciente">Registrar paciente</a>
+              <a class="dropdown-item" routerLink="/listado-pacientes">Listar pacientes</a>
+            </div>
+        </li>
+
+        <li class="nav-item dropdown" dropdown>
+          <a class="nav-link dropdown-toggle" dropdownToggle id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Doctores
+          </a>
+          <div class="dropdown-menu" *dropdownMenu aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" routerLink="/agregar-medico">Registrar doctor</a>
+            <a class="dropdown-item" routerLink="/listado-medicos">Listar doctores</a>
+          </div>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="#">Comunicacion</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="#">Mapa</a>
+        </li>
+
+        <li class="nav-item dropdown" dropdown>
+            <a class="nav-link dropdown-toggle" dropdownToggle href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Informes
+            </a>
+            <div class="dropdown-menu" *dropdownMenu aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="#">Fechas y horas</a>
+            </div>
+        </li>
+
+      </ul>
+    </div>
+
+    <button class="btn btn-danger" (click)="logout()">Salir</button>
+  </nav>
