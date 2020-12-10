@@ -38,11 +38,11 @@
 
             <div class="col-sm-4">
                 <div class="form-group">
-                    <label for="">Correo</label>
-                    <input type="text" class="form-control" formControlName="correo" placeholder="Agregue su correo">
-                    <div *ngIf="formularioMedico.controls['correo'].invalid && formularioMedico.controls['correo'].dirty" class="alert alert-danger" role="alert">
-                        <span *ngIf="formularioMedico.controls['correo'].errors.required">Por favor ingresa un correo</span>
-                        <span *ngIf="formularioMedico.controls['correo'].errors.email">Este correo no existe</span>
+                    <label for="">Email</label>
+                    <input type="text" class="form-control" formControlName="email" placeholder="Agregue su email">
+                    <div *ngIf="formularioMedico.controls['email'].invalid && formularioMedico.controls['email'].dirty" class="alert alert-danger" role="alert">
+                        <span *ngIf="formularioMedico.controls['email'].errors.required">Por favor ingresa un email</span>
+                        <span *ngIf="formularioMedico.controls['email'].errors.email">Este email no existe</span>
                     </div>
                 </div>
             </div>
@@ -67,25 +67,10 @@
             </div>
 
 
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label for="">Imagen</label>
-                    <input type="file" (change)="subirImagenD($event)" class="form-control-file" formControlName="imgURL" placeholder="Agregue su imagen">
-                    <div *ngIf="formularioMedico.controls['imgURL'].invalid && formularioMedico.controls['imgURL'].dirty" class="alert alert-danger" role="alert">
-                        <span *ngIf="formularioMedico.controls['imgURL'].errors.required">Ingresa una imagen</span>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="col-sm-12">
-                <progressbar [value]="porcentajeSubida" [striped]="true">{{porcentajeSubida}}%</progressbar>
-            </div>
-
-
             <br><br>
-            <button *ngIf="!esEditable" class="btn btn-primary" [disabled]="formularioMedico.invalid && !urlImagen" (click)="agregar()">Agregar</button>
-            <button *ngIf="esEditable" class="btn btn-primary" [disabled]="formularioMedico.invalid && !urlImagen" (click)="editar()">Editar</button>
+            <button *ngIf="!esEditable" class="btn btn-primary" [disabled]="formularioMedico.invalid" (click)="agregar()">Agregar</button>
+            <button *ngIf="esEditable" class="btn btn-primary" [disabled]="formularioMedico.invalid" (click)="editar()">Editar</button>
+            <button class="btn btn-danger ml-3" [routerLink]="['/listado-medicos']">Cancelar</button>
         </div>
     </form>
 </div>

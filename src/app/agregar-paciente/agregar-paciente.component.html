@@ -30,11 +30,11 @@
 
             <div class="col-sm-4">
                 <div class="form-group">
-                    <label for="">Correo</label>
-                    <input type="text" class="form-control" formControlName="correo" placeholder="Agregue un correo">
-                    <div *ngIf="formularioPaciente.controls['correo'].invalid && formularioPaciente.controls['correo'].dirty" class="alert alert-danger" role="alert">
-                        <span *ngIf="formularioPaciente.controls['correo'].errors.required">Por favor ingresa tu correo</span>
-                        <span *ngIf="formularioPaciente.controls['correo'].errors.email">Este correo no existe</span>
+                    <label for="">Email</label>
+                    <input type="text" class="form-control" formControlName="email" placeholder="Agregue un email">
+                    <div *ngIf="formularioPaciente.controls['email'].invalid && formularioPaciente.controls['email'].dirty" class="alert alert-danger" role="alert">
+                        <span *ngIf="formularioPaciente.controls['email'].errors.required">Por favor ingresa tu email</span>
+                        <span *ngIf="formularioPaciente.controls['email'].errors.email">Este email no existe</span>
                     </div>
                 </div>
             </div>
@@ -58,15 +58,16 @@
 
             <div class="col-sm-4">
                 <div class="form-group">
-                    <label for="">Fecha de Nacimiento</label>
-                    <input type="date" class="form-control" formControlName="fechaNacimiento" placeholder="Agregue una fecha de nacimiento">
-                    <div *ngIf="formularioPaciente.controls['fechaNacimiento'].invalid && formularioPaciente.controls['fechaNacimiento'].dirty" class="alert alert-danger" role="alert">
-                        <span *ngIf="formularioPaciente.controls['fechaNacimiento'].errors.required">La fecha de nacimiento es requerida</span>
+                    <label for="">Edad</label>
+                    <input type="number" class="form-control" formControlName="edad" placeholder="Agregue su edad actual">
+                    <div *ngIf="formularioPaciente.controls['edad'].invalid && formularioPaciente.controls['edad'].dirty" class="alert alert-danger" role="alert">
+                        <span *ngIf="formularioPaciente.controls['edad'].errors.required">La edad es requerida</span>
                     </div>
                 </div>
             </div>
 
 
+<!--
             <div class="col-sm-12">
                 <div class="form-group">
                     <label for="">Imagen</label>
@@ -81,10 +82,12 @@
             <div class="col-sm-12">
                 <progressbar [value]="porcentajeSubida" [striped]="true">{{porcentajeSubida}}%</progressbar>
             </div>
+-->
 
             <br><br>
-            <button *ngIf="!esEditable" class="btn btn-primary" [disabled]="formularioPaciente.invalid && !urlImagen" (click)="agregar()">Agregar</button>
-            <button *ngIf="esEditable" class="btn btn-primary" [disabled]="formularioPaciente.invalid && !urlImagen" (click)="editar()">Editar</button>
+            <button *ngIf="!esEditable" class="btn btn-primary" [disabled]="formularioPaciente.invalid" (click)="agregar()">Agregar</button>
+            <button *ngIf="esEditable" class="btn btn-primary" [disabled]="formularioPaciente.invalid" (click)="editar()">Editar</button>
+            <button class="btn btn-danger ml-3" [routerLink]="['/listado-pacientes']">Cancelar</button>
         </div>
     </form>
 </div>

@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  mapBoxToken: 'pk.eyJ1IjoiY2hyaXMwMTAwIiwiYSI6ImNraWdveGNkajJlczEycm54ZzFjZ2VncWkifQ.gzP5Hn9sss2gCYxZ8ng2-w',
   firebase: {
     apiKey: "AIzaSyCs__kraQzePNDRljnptEP6-DJTjqfKYds",
     authDomain: "colombiavirus-2e2d3.firebaseapp.com",

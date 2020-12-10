@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import Swal from 'sweetalert2'
+import {UsuarioService} from '../login/usuario.service';
+import {Usuario} from '../login/usuario';
 
 @Component({
   selector: 'app-agregar-medico',
@@ -13,14 +15,17 @@ import Swal from 'sweetalert2'
 export class AgregarMedicoComponent implements OnInit {
   formularioMedico: FormGroup;
   porcentajeSubida: number = 0;
-  urlImagen: string = ''
-  esEditable: boolean = false;
-  id: string;
+  urlImagen = '';
+  esEditable = false;
+  id: number;
+
   constructor(
-    private fbM: FormBuilder, 
-    private storage: AngularFireStorage, 
+    private fbM: FormBuilder,
+    private storage: AngularFireStorage,
     private db: AngularFirestore,
-    private activeRoute: ActivatedRoute)
+    private activeRoute: ActivatedRoute,
+    private router: Router,
+    private usuarioService: UsuarioService)
     { }
 
   ngOnInit(): void {
@@ -28,33 +33,31 @@ export class AgregarMedicoComponent implements OnInit {
     this.formularioMedico = this.fbM.group({
       nombre: ['', Validators.required],
       apellido: ['', Validators.required],
-      correo:['', Validators.compose([
+      email: ['', Validators.compose([
         Validators.required, Validators.email
       ])],
-      cedula:[''],
+      cedula: [''],
       edad: ['', Validators.required],
-      telefono: [''],
-      imgURL: ['', Validators.required]
-    })
+      telefono: ['']
+    });
 
-    this.id = this.activeRoute.snapshot.params.medicoID; 
+    this.id = this.activeRoute.snapshot.params.medicoID;
 
-    if(this.id != undefined)
+    if (this.id != undefined)
     {
       this.esEditable = true;
-      this.db.doc<any>('medicos'+'/'+this.id).valueChanges().subscribe((medico)=>{
-        console.log(medico)
+      this.usuarioService.findUser(this.id).subscribe(
+        obj => {
+        console.log(obj);
+
         this.formularioMedico.setValue({
-          nombre: medico.nombre,
-          apellido: medico.apellido,
-          correo: medico.correo,
-          edad: medico.edad,
-          telefono: medico.telefono,
-          cedula: medico.cedula,
-          imgURL: ''
-        })
-  
-        this.urlImagen = medico.imgURL;
+          nombre: obj.nombre,
+          apellido: obj.apellido,
+          email: obj.email,
+          edad: obj.edad,
+          telefono: obj.telefono,
+          cedula: obj.cedula
+        });
       });
 
 
@@ -62,60 +65,62 @@ export class AgregarMedicoComponent implements OnInit {
 
   }
 
-  agregar()
-  {
-    this.formularioMedico.value.imgURL = this.urlImagen
-    console.log(this.formularioMedico.value)
-    this.db.collection('medicos').add(this.formularioMedico.value).then((termino)=>{
+  agregar(): void {
+    console.log('add pacient');
+
+    console.log(this.formularioMedico.value);
+    const usuario = new Usuario();
+    usuario.apellido = this.formularioMedico.value.apellido;
+    usuario.cedula = this.formularioMedico.value.cedula;
+    usuario.edad = this.formularioMedico.value.edad;
+    usuario.email = this.formularioMedico.value.email;
+    usuario.nombre = this.formularioMedico.value.nombre;
+    usuario.password = this.formularioMedico.value.cedula;
+    usuario.username = this.formularioMedico.value.email;
+    usuario.roles = ['ROLE_ADMIN'];
+    usuario.tipo = 'doctor';
+    usuario.telefono = this.formularioMedico.value.telefono;
+
+    this.usuarioService.create(usuario).subscribe(obj => {
       Swal.fire({
         title: 'Agregado!',
-        text: 'Se agrego correctamente',
+        text: 'Se agrego correctamente al usuario: ' + usuario.nombre,
         icon: 'success'
-      })
-    })
+      });
+
+      // redireccionar
+      this.router.navigate(['/listado-medicos']);
+    });
   }
 
-  editar()
-  {
-    this.formularioMedico.value.imgURL = this.urlImagen
-    
-    this.db.doc('medicos/'+this.id).update(this.formularioMedico.value).then(()=>{
+  editar(): void {
+    console.log('add pacient');
+
+    console.log(this.formularioMedico.value);
+    const usuario = new Usuario();
+    usuario.apellido = this.formularioMedico.value.apellido;
+    usuario.cedula = this.formularioMedico.value.cedula;
+    usuario.edad = this.formularioMedico.value.edad;
+    usuario.email = this.formularioMedico.value.email;
+    usuario.nombre = this.formularioMedico.value.nombre;
+    usuario.password = this.formularioMedico.value.cedula;
+    usuario.username = this.formularioMedico.value.email;
+    usuario.roles = ['ROLE_ADMIN'];
+    usuario.tipo = 'doctor';
+    usuario.telefono = this.formularioMedico.value.telefono;
+    usuario.id = this.id;
+
+    this.usuarioService.create(usuario).subscribe(obj => {
       Swal.fire({
         title: 'Editado!',
-        text: 'Se editó correctamente',
+        text: 'Se edito correctamente al usuario: ' + usuario.nombre,
         icon: 'success'
-      })
-    }).catch(()=>{
-      Swal.fire({
-        title: 'Error',
-        text: 'Ocurrió un error',
-        icon: 'error'
-      })
-    })
+      });
 
+      // redireccionar
+      this.router.navigate(['/listado-medicos']);
+    });
   }
 
-  subirImagenD(evento)
-  {
-    if(evento.target.files.length > 0)
-    {
-      let nombre = new Date().getTime().toString()
-      let archivo = evento.target.files[0]
-      let extension = archivo.name.toString().substring(archivo.name.toString().lastIndexOf('.'))
-      let ruta ='medicos/'+nombre+extension;
-      const referencia = this.storage.ref(ruta)
-      const tarea = referencia.put(archivo)
-      tarea.then((objeto)=>{
-        console.log('imagen subida')
-        
-        referencia.getDownloadURL().subscribe((url)=>{
-          this.urlImagen = url; 
-        })
-      })
-      tarea.percentageChanges().subscribe((porcentaje)=>{
-      this.porcentajeSubida = parseInt(porcentaje.toString());
-      })
-    }
 
-  }
 }

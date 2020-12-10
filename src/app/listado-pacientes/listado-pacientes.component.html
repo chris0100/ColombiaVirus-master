@@ -12,12 +12,13 @@
     <div class='row'>
         <div class="col-sm-3" *ngFor="let paciente of pacientes">
             <div class="card">
-                <img class="card-img-top imgPaciente" [src]="paciente.imgURL">
+               <img class="card-img-top imgPaciente" src="assets/paciente.png" alt="">
                 <div class="card-body">
                   <p>{{paciente.id}}</p>
                   <h5 class="card-title">{{paciente.nombre}} {{paciente.apellido}}</h5>
                   <a [routerLink]="['/agregar-paciente/', paciente.id]" class="card-link">Editar</a>
-                  <a href="#" class="card-link text-danger" >Desactivar</a>
+                  <a *ngIf="paciente.enabled" (click)="desactivar(paciente.id)" class="card-link text-danger" style="cursor: pointer">Desactivar</a>
+                  <a *ngIf="!paciente.enabled"(click)="activar(paciente.id)" class="card-link text-danger" style="cursor: pointer">Activar</a>
                 </div>
               </div>
         </div>

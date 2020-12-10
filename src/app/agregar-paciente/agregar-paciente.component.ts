@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { AngularFireStorage } from '@angular/fire/storage';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import Swal from 'sweetalert2'
+import {Component, OnInit} from '@angular/core';
+import {AngularFirestore} from '@angular/fire/firestore';
+import {AngularFireStorage} from '@angular/fire/storage';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
+import Swal from 'sweetalert2';
+import {Usuario} from '../login/usuario';
+import {UsuarioService} from '../login/usuario.service';
 
 @Component({
   selector: 'app-agregar-paciente',
@@ -16,14 +18,16 @@ export class AgregarPacienteComponent implements OnInit {
   porcentajeSubida = 0;
   urlImagen = '';
   esEditable = false;
-  id: string;
+  id: number;
 
   constructor(
     private fb: FormBuilder,
     private storage: AngularFireStorage,
     private db: AngularFirestore,
-    private activeRoute: ActivatedRoute)
-    { }
+    private activeRoute: ActivatedRoute,
+    private usuarioService: UsuarioService,
+    private router: Router) {
+  }
 
 
   ngOnInit(): void {
@@ -31,96 +35,93 @@ export class AgregarPacienteComponent implements OnInit {
     this.formularioPaciente = this.fb.group({
       nombre: ['', Validators.required],
       apellido: ['', Validators.required],
-      correo: ['', Validators.compose([
+      email: ['', Validators.compose([
         Validators.required, Validators.email
       ])],
       cedula: [''],
-      fechaNacimiento: ['', Validators.required],
-      telefono: [''],
-      imgURL: ['', Validators.required]
+      edad: ['', Validators.required],
+      telefono: ['']
     });
 
     this.id = this.activeRoute.snapshot.params.pacienteID;
-    if (this.id !== undefined)
-    {
+    console.log('este el id: ' + this.id);
+
+    // si no viene con una ruta definida, entonces se realiza lo siguiente.
+    if (this.id !== undefined) {
       this.esEditable = true;
 
-      this.db.doc<any>('pacientes' + '/' + this.id).valueChanges().subscribe((paciente) => {
-        this.formularioPaciente.setValue({
-          nombre : paciente.nombre,
-          apellido: paciente.apellido,
-          correo: paciente.correo,
-          cedula: paciente.cedula,
-          fechaNacimiento: new Date(paciente.fechaNacimiento.seconds * 1000).toISOString().substr(0, 10),
-          telefono: paciente.telefono,
-          imgURL: ''
+      this.usuarioService.findUser(this.id).subscribe(
+        obj => {
+          console.log(obj);
+          this.formularioPaciente.setValue({
+            nombre: obj.nombre,
+            apellido: obj.apellido,
+            email: obj.email,
+            cedula: obj.cedula,
+            telefono: obj.telefono,
+            edad: obj.edad
+          });
         });
-
-
-        this.urlImagen = paciente.imgURL;
-      });
     }
-
-
   }
 
 
-  agregar(): void
-  {
-    this.formularioPaciente.value.imgURL = this.urlImagen
-    this.formularioPaciente.value.fechaNacimiento = new Date(this.formularioPaciente.value.fechaNacimiento)
-    console.log(this.formularioPaciente.value)
-    this.db.collection('pacientes').add(this.formularioPaciente.value).then((termino)=>{
+  agregar(): void {
+    console.log('add pacient');
+
+    console.log(this.formularioPaciente.value);
+    const usuario = new Usuario();
+    usuario.apellido = this.formularioPaciente.value.apellido;
+    usuario.cedula = this.formularioPaciente.value.cedula;
+    usuario.edad = this.formularioPaciente.value.edad;
+    usuario.email = this.formularioPaciente.value.email;
+    usuario.nombre = this.formularioPaciente.value.nombre;
+    usuario.password = this.formularioPaciente.value.cedula;
+    usuario.username = this.formularioPaciente.value.email;
+    usuario.roles = ['ROLE_USER'];
+    usuario.tipo = 'paciente';
+    usuario.telefono = this.formularioPaciente.value.telefono;
+
+    this.usuarioService.create(usuario).subscribe(obj => {
       Swal.fire({
         title: 'Agregado!',
-        text: 'Se agrego correctamente',
+        text: 'Se agrego correctamente al usuario: ' + usuario.nombre,
         icon: 'success'
       });
+
+      // redireccionar
+      this.router.navigate(['/listado-pacientes']);
     });
   }
 
-  editar(): void
-  {
-    this.formularioPaciente.value.imgURL = this.urlImagen;
-    this.formularioPaciente.value.fechaNacimiento = new Date(this.formularioPaciente.value.fechaNacimiento);
 
-    this.db.doc('pacientes/'+this.id).update(this.formularioPaciente.value).then(()=>{
+  editar(): void {
+    console.log('add pacient');
+
+    console.log(this.formularioPaciente.value);
+    const usuario = new Usuario();
+    usuario.apellido = this.formularioPaciente.value.apellido;
+    usuario.cedula = this.formularioPaciente.value.cedula;
+    usuario.edad = this.formularioPaciente.value.edad;
+    usuario.email = this.formularioPaciente.value.email;
+    usuario.nombre = this.formularioPaciente.value.nombre;
+    usuario.password = this.formularioPaciente.value.cedula;
+    usuario.username = this.formularioPaciente.value.email;
+    usuario.roles = ['ROLE_USER'];
+    usuario.tipo = 'paciente';
+    usuario.telefono = this.formularioPaciente.value.telefono;
+    usuario.id = this.id;
+
+    this.usuarioService.create(usuario).subscribe(obj => {
       Swal.fire({
         title: 'Editado!',
-        text: 'Se editó correctamente',
+        text: 'Se edito correctamente al usuario: ' + usuario.nombre,
         icon: 'success'
       });
-    }).catch(() => {
-      Swal.fire({
-        title: 'Error',
-        text: 'Ocurrió un error al actualizar el cliente',
-        icon: 'error'
-      });
+
+      // redireccionar
+      this.router.navigate(['/listado-pacientes']);
     });
-  }
-
-  subirImagen(evento)
-  {
-    if(evento.target.files.length > 0)
-    {
-      let nombre = new Date().getTime().toString()
-      let archivo = evento.target.files[0]
-      let extension = archivo.name.toString().substring(archivo.name.toString().lastIndexOf('.'))
-      let ruta = 'pacientes/' + nombre + extension;
-      const referencia = this.storage.ref(ruta)
-      const tarea = referencia.put(archivo)
-      tarea.then((objeto)=>{
-        console.log('imagen subida')
-        referencia.getDownloadURL().subscribe((url)=>{
-          this.urlImagen = url;
-        })
-      })
-      tarea.percentageChanges().subscribe((porcentaje)=>{
-        this.porcentajeSubida = parseInt(porcentaje.toString());
-      })
-    }
-
-
   }
 
 

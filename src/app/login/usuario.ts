@@ -6,4 +6,8 @@ export class Usuario {
   apellido: string;
   email: string;
   roles: string[] = [];
+  edad: number;
+  cedula: string;
+  tipo: string;
+  telefono: string;
 }

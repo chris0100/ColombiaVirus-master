@@ -24,6 +24,9 @@ import {registerLocaleData} from '@angular/common';
 import localeES from '@angular/common/locales/es';
 import {AuthInterceptor} from './login/interceptors/auth.interceptor';
 import {TokenInterceptor} from './login/interceptors/token.interceptor';
+import { ChatComponent } from './chat/chat.component';
+import { MapaComponent } from './mapa/mapa.component';
+import {GoogleMapsModule} from '@angular/google-maps';
 
 
 
@@ -37,7 +40,9 @@ registerLocaleData(localeES, 'es');
     ListadoPacientesComponent,
     AgregarPacienteComponent,
     ListadoMedicosComponent,
-    AgregarMedicoComponent
+    AgregarMedicoComponent,
+    ChatComponent,
+    MapaComponent
   ],
   imports: [
     BrowserModule,
@@ -51,7 +56,8 @@ registerLocaleData(localeES, 'es');
     ProgressbarModule.forRoot(),
     BsDropdownModule.forRoot(),
     AngularFireModule.initializeApp(environment.firebase),
-    HttpClientModule
+    HttpClientModule,
+    GoogleMapsModule
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'es' },

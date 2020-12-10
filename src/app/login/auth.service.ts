@@ -71,6 +71,11 @@ export class AuthService {
     this._usuario.email = objPayload.email;
     this._usuario.username = objPayload.user_name;
     this._usuario.roles = objPayload.authorities;
+    this._usuario.edad = objPayload.edad;
+    this._usuario.cedula = objPayload.cedula;
+    this._usuario.tipo = objPayload.tipo;
+    this._usuario.telefono = objPayload.telefono;
+
 
     // Se guarda en el session como un string
     sessionStorage.setItem('usuario', JSON.stringify(this._usuario));

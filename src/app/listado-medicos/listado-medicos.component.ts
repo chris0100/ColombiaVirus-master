@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
+import Swal from "sweetalert2";
+import {UsuarioService} from '../login/usuario.service';
 
 @Component({
   selector: 'app-listado-medicos',
@@ -8,22 +10,56 @@ import { AngularFirestore } from '@angular/fire/firestore';
 })
 export class ListadoMedicosComponent implements OnInit {
   medicos: any[] = new Array<any>();
-  constructor(private dbM: AngularFirestore) { }
+  constructor(private dbM: AngularFirestore, private usuarioService: UsuarioService) { }
 
   ngOnInit(): void {
 
     this.medicos.length = 0;
-    this.dbM.collection('medicos').get().subscribe((resultado) => {
+    this.recargarUsuariosMedicos();
 
-      resultado.docs.forEach((item) => {
+  }
 
-        const medico = item.data();
-        medico.id = item.id;
-        medico.ref = item.ref;
-        this.medicos.push(medico);
+  recargarUsuariosMedicos(): void {
+    this.usuarioService.listOfUsersDr().subscribe(
+      obj => {
+        console.log(obj);
+        this.medicos = obj;
       });
+  }
 
-    });
+
+
+  desactivar(id: number): void {
+    // desactiva al medico
+    console.log('se quiere desactivar al siguiente medico: ' + id);
+    this.usuarioService.togglePaciente(id).subscribe(
+      obj => {
+        console.log(obj);
+        this.recargarUsuariosMedicos();
+        Swal.fire({
+          title: 'Desactivado!',
+          text: 'Se desactivo correctamente al usuario: ' + obj.nombre,
+          icon: 'success'
+        });
+      }
+    );
+  }
+
+
+  activar(id: number): void {
+    // activa el medico
+    console.log('se quiere activar al siguiente medico: ' + id);
+    this.usuarioService.togglePaciente(id).subscribe(
+      obj => {
+        console.log(obj);
+        this.recargarUsuariosMedicos();
+        Swal.fire({
+          title: 'Activado!',
+          text: 'Se activo correctamente al usuario: ' + obj.nombre,
+          icon: 'success'
+        });
+      }
+    );
   }
 
 }
